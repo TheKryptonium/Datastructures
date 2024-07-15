@@ -3,7 +3,7 @@
 #include <string.h> // strlen
 #include "screen.h"
 
-// données locales au fichier ecran.cpp,
+
 // inaccessibles pour l'utilisateur du module.
 // static = locales au fichier pour les variables externes aux fonctions
 static char* ecran; // pointeur sur le début de l'écran
@@ -43,25 +43,27 @@ void ecrirePixel (int nl, int nc) {
 
 // avancer dans la direction d de lg pixels
 void avancer (int d, int n) {
- switch (d) {
-    case DROITE:
-        for (int i=ncc; i<ncc+n; i++) ecrirePixel (nlc, i);
-        ncc += n-1;
-        break;
-    
-    case HAUT:
-        for (int i=nlc; i>nlc-n; i--) ecrirePixel (i, ncc);
-        nlc += -n+1;
-        break;
-    case GAUCHE:
-        for (int i=ncc; i>ncc-n; i--) ecrirePixel (nlc, i);
-        ncc += -n+1;
-        break;
-    case BAS:
-        for (int i=nlc; i<nlc+n; i++) ecrirePixel (i, ncc);
-        nlc += n-1;
-        break;
- } // switch
+    switch (d) {
+        case DROITE:
+            for (int i=ncc; i<ncc+n; i++) ecrirePixel (nlc, i);
+            ncc += n-1;
+            break;
+        
+        case HAUT:
+            for (int i=nlc; i>nlc-n; i--) ecrirePixel (i, ncc);
+            nlc += -n+1;
+            break;
+
+        case GAUCHE:
+            for (int i=ncc; i>ncc-n; i--) ecrirePixel (nlc, i);
+            ncc += -n+1;
+            break;
+
+        case BAS:
+            for (int i=nlc; i<nlc+n; i++) ecrirePixel (i, ncc);
+            nlc += n-1;
+            break;
+    } // switch
 }
 
 // tracer un rectangle défini par 2 points csg et cid
@@ -93,8 +95,8 @@ void afficherEcran () {
     }
     printf ("\n");
 }
-// mettre l'écran à blanc
 
+// mettre l'écran à blanc
 void effacerEcran () {
     for (int i=0; i<nbLig; i++) {
         for (int j=0; j<nbCol; j++) ecran[i*nbCol+j] = ' ';
