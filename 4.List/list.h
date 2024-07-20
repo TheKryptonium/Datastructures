@@ -1,11 +1,11 @@
 #ifndef LIST_H
 #define LIST_H
 
-#define NONORDONNE 0
-#define CROISSANT 1
-#define DECROISSANT 2
+#define UNORDERED 0
+#define GROWING 1
+#define DECREASING 2
 
-typedef boolean int;
+typedef int boolean;
 #define True 1
 #define False 0
 
@@ -21,15 +21,17 @@ typedef struct{
     unsigned int nb;
     unsigned int type;
     char* (*toString)(void*);
-    int (*toCompare)(void*, void*);
+    int (*compare)(void*, void*);
 
 }List;
 
-void  initList(List* li, unsigned int type, char* (*toString)(void*,void*), int (*compare)(void*, void*));
+void  initList(List* li, unsigned int type, char* (*toString)(void*), int (*compare)(void*, void*));
 void  initList();
-List* createList(unsigned int type, char* (*toString)(void*, void*), int (*compare)(void*, void*));
+
+List* createList(unsigned int type, char* (*toString)(void*), int (*compare)(void*, void*));
 List* createList(unsigned int type);
 List* createList();
+
 boolean is_empty(List* li);
 int nb(List* li);
 
@@ -46,8 +48,7 @@ void list(List* li, void (*f)(void*));
 void* search_object(List* li, void* object);
 
 void* extract_head(List* li);
-void* extract_after(List* li, void* previous);
-void* extract_last(List* li);
+void* extract_bottom(List* li);
 void* extract(List* li, void* object);
 
 void destroy_list(List* li);
