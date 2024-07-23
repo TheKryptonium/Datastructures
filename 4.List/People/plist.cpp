@@ -52,7 +52,7 @@ int main(){
             }break;
 
             case 4:{
-                People* extract = (People*)extract_last(lp);
+                People* extract = (People*)extract_bottom(lp);
                 if(extract==NULL){
                     printf("Empty list");
                 }else{
@@ -63,11 +63,12 @@ int main(){
             case 5:{
                 printf("Name the element that you want to drop: ");
                 ch15 name; scanf("%s", name);
+                ch15 surname; scanf("%s", surname);
                 People* one = createPeople(name, " ? ");
                 People* found = (People*)search_object(lp, one);
-                People* extraction = (People*)extract(lp, found);
-                if(extraction!=NULL){
-                    printf("%s %s has been dropped from the list",extraction->name, extraction->surname);
+                boolean extraction = extract(lp, found);
+                if(extraction){
+                    printf("%s %s has been dropped from the list",found->name, found->surname);
                 }
             }break;
 
@@ -76,9 +77,10 @@ int main(){
             }break;
             
             case 7:{
-                printf("Name the one who you are looking for");
+                printf("Name completely the one you are looking for: ");
                 ch15 name; scanf("%s", name);
-                People* search= createPeople(name, " ? ");
+                ch15 surname; scanf("%s", surname);
+                People* search= createPeople(name, surname);
                 People* found = (People*)search_object(lp, search);
                 if(found!=NULL){
                     printf("Element %s %s found", found->name, found->surname);
@@ -90,33 +92,35 @@ int main(){
             case 8:{
                 printf("Name the file from where you want to load the datas: ");
                 char* file_name; scanf("%s", &file_name);
-                FILE* file = fopen(file_name, "r+");
+                FILE* file = fopen(file_name, "r");
                 
-                if(file==NULL)
+                if(file==NULL){
                     printf("This file doesn't exist.");
-                    break;
-                
-                printf("In which order do you want to order your list?\n");
-                printf("1. Growing order\n");
-                printf("2. Decreasing order\n");
-                unsigned int order;
-                printf("Select your order: "); scanf("%d",&order);
+                }else{
+                    printf("In which order do you want to order your list?\n");
+                    printf("1. Growing order\n");
+                    printf("2. Decreasing order\n");
+                    unsigned int order;
+                    printf("Select your order: "); scanf("%d",&order);
 
-                List* lp = createList(order, toStringPeople, comparePeople);
-                while(!feof(file)){
-                    ch15 name, surname;
-                    fscanf(file, "%s %s", name, surname);
-                    People* index = createPeople(name, surname);
-                    insert_inOrder(lp, index);
-                }
-                fclose(file);                
+                    List* lp = createList(order, toStringPeople, comparePeople);
+                    while(!feof(file)){
+                        ch15 name, surname;
+                        fscanf(file, "%s %s", name, surname);
+                        People* index = createPeople(name, surname);
+                        insert_inOrder(lp, index);
+                    }
+                    fclose(file);
+                    list(lp);
+                }                    
             }break;
             
             case 9:{
                 destroy_list(lp);
-            }break;
-
+            }break;            
+                
+                
         }
-    }
+    }    
     return 0;
 }

@@ -5,12 +5,14 @@
 #define GROWING 1
 #define DECREASING 2
 
+typedef void Object;
+
 typedef int boolean;
 #define True 1
 #define False 0
 
 typedef struct element{
-    void* reference;
+    Object* reference;
     struct element* next;
 }Element;
 
@@ -20,41 +22,41 @@ typedef struct{
     Element* current;
     unsigned int nb;
     unsigned int type;
-    char* (*toString)(void*);
-    int (*compare)(void*, void*);
+    char* (*toString)(Object*);
+    int (*compare)(Object*, Object*);
 
 }List;
 
-void  initList(List* li, unsigned int type, char* (*toString)(void*), int (*compare)(void*, void*));
-void  initList();
+void  initList(List* li, unsigned int type, char* (*toString)(Object*), int (*compare)(Object*, Object*));
+void  initList(List* li);
 
-List* createList(unsigned int type, char* (*toString)(void*), int (*compare)(void*, void*));
+List* createList(unsigned int type, char* (*toString)(Object*), int (*compare)(Object*, Object*));
 List* createList(unsigned int type);
 List* createList();
 
 boolean is_empty(List* li);
 int nb(List* li);
 
-void insertHead(List* li, void* object);
-void insertLast(List* li, void* object);
+void insertHead(List* li, Object* object);
+void insertLast(List* li, Object* object);
 
 void openList(List* li);
 boolean EOList(List* li);
-void* current_object(List* li);
+Object* current_object(List* li);
 
 void list(List* li);
-void list(List* li, void (*f)(void*));
+void list(List* li, void (*f)(Object*));
 
-void* search_object(List* li, void* object);
+Object* search_object(List* li, Object* object);
 
-void* extract_head(List* li);
-void* extract_bottom(List* li);
-void* extract(List* li, void* object);
+Object* extract_head(List* li);
+Object* extract_bottom(List* li);
+boolean extract(List* li, Object* object);
 
 void destroy_list(List* li);
 
 void copy_list(List* li1, List* li2);
 
-void insert_inOrder(List* li,void* object);
+void insert_inOrder(List* li,Object* object);
 
 #endif
