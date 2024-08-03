@@ -607,3 +607,251 @@ Tree* dupTreeOnLevel(Tree* tree, int nblevel, Object* (*toClone)(Object*)){
     return createTree(dupTreeOnLevel(tree->root, nblevel, toClone));
 }
 
+static Node* searchInOrder(Node* root, Object* object, int (*compare)(Object*, Object*)){
+    int result; 
+    if(root==NULL){
+        return NULL;
+    }else if(result=compare(object, root->reference)==0){
+        return root;
+    }else if(result<0){
+        return searchInOrder(root->left, object, compare);
+    }else{
+        return searchInOrder(root->right, object, compare);
+    }
+}
+
+Node* searchInOrder(Tree* tree, Object* object){
+    return searchInOrder(tree->root, object, tree->toCompare);
+}
+
+static void insertOrderTree(Node** root, Object* object, int (*compare)(Object*, Object*)){
+    Node* node =*root;
+    int result;
+    if(root==NULL){
+        node=cF(object);
+        *root= node;
+    }else if(result=compare(object, node->reference)==0){
+        printf("This object still exists\n");
+    }else if(result<0){
+        insertOrderTree(&node->left, object, compare);
+    }else{
+        insertOrderTree(&node->right, object, compare);
+    }
+}
+
+void insertOrderTree(Tree* tree, Object* object){
+    insertOrderTree(&tree->root, object, tree->toCompare);
+}
+
+static Object* minOrderTree(Node* root){
+    if(root==NULL){
+        return NULL;
+    }else if(root->left==NULL){
+        return root->reference;
+    }else{
+        return minOrderTree(root->left);
+    }
+}
+
+Object* minOrderTree(Tree* tree){
+    return minOrderTree(tree->root);
+}
+
+Object* maxOrderTree(Node* root){
+    if(root==NULL){
+        return NULL;
+    }else if(root->right==NULL){
+        return root->reference;
+    }else{
+        return maxOrderTree(root->right);
+    }
+}
+
+Object* maxOrderTree(Tree* tree){
+    return maxOrderTree(tree->root);
+}
+
+Node* supMax(Node** root){
+    Node* node= *root;
+    Node* more;
+    if(node->right==NULL){
+        more=node;
+        node->left=node;
+        *root=node;
+    }else{
+        more=supMax(&node->right);
+    }
+    return more;
+}
+
+Node* deleteOrderTree(Node** root, Object* object, int (*compare)(Object*, Object*)){
+    Node* node =*root;
+    Node* extract;
+    int result;
+
+    if(node==NULL){
+        extract=NULL;
+    }else if(result=compare(object,node->reference)<0){
+        extract=deleteOrderTree(&node->left, object, compare);
+    }else if(result>0){
+        extract=deleteOrderTree(&node->right, object, compare);
+    }else{
+        extract=node;
+        if(extract->right==NULL){
+            extract=extract->left;
+        }else if(extract->left==NULL){
+            extract=extract->right;
+        }else{
+            extract=supMax(&node->left);
+            Object* temp=node->reference;
+            node->reference=extract->reference;
+            extract->reference=temp;
+        }
+    }
+
+    *root=node;
+    return extract;
+}
+
+Node* deleteOrderTree(Tree* tree, Object* object){
+    deleteOrderTree(&tree->root, object, tree->toCompare);
+}
+
+void infixLeftRight(Node* root, char* (*toString)(Object*)){
+    if(root!=NULL){
+        infix(root->left, toString);
+        printf("%s", toString(root->reference));
+        infix(root->right, toString);
+    }
+}
+
+void infixLeftRight(Tree* tree){
+    infix(tree->root,tree->toString);
+}
+
+
+static void permute(Node** node1, Node** node2, Node** node3){
+   Node* temp =*node3;
+   *node3=*node2;
+   *node2=*node1;
+   *node1=temp;
+}
+
+static void rightRot(Node** root){
+    Node* node =*root;
+    Node* left= node->left;
+    permute(root, &left->right, &node->left);
+}
+
+static void leftRot(Node** root){
+    Node* node =*root;
+    Node* right=node->right;
+    permute(root, &right->left, &node->right);
+}
+
+static void insertinBalancedTree(Node** root, Object* object, boolean* reb, char* (*toString)(Object*), int (*compare)(Object*, Object*)){
+    int result;
+    Node* node =*root;
+    if(node==NULL){
+        node=cNd(object);
+        node->fact=0;
+        *reb=True;
+        *root=node;
+    }else if(result=compare(node->reference, object)<1){
+        insertinBalancedTree(&node->left, object, reb, toString, compare);
+        if(*reb){
+            switch(node->fact){
+                case 1:{
+                    fprintf(stderr, "%s: 1->0\n", toString(node->reference));
+                    node->fact=0;
+                    *reb=False;
+                }break;
+                case 0:{
+                    node->fact=-1;
+                    fprintf(stderr,"%s: 0->-1", toString(node->reference));
+                }break;
+                case -1:{
+                    if(node->left->fact==-1){
+                        fprintf(stderr,"%s -1->LL\n", toString(node->reference));
+                        Node* b= node;
+                        Node* a= b->left;
+                        b->fact=0;
+                        a->fact=0;
+                        rightRot(root);
+                    }else{
+                        fprintf(stderr, "%s -1->LR\n", toString(node->reference));
+                        Node* c= node;
+                        Node* a=c->left;
+                        Node* b=a->right;
+                        c->fact=b->fact==-1?1:0;
+                        a->fact=b->fact==1?-1:0;
+                        b->fact=0;
+                        leftRot(&node->left);
+                        rightRot(root);
+                    }
+                    *reb=False;
+                }break;
+            }
+        }
+    }else if(result>0){
+        insertinBalancedTree(&node->right,object,reb,toString, compare);
+        if(*reb){
+            switch(node->fact){
+                case -1:{
+                    fprintf(stderr, "%s -1->0", toString(node->reference));
+                    node->fact=0;
+                    *reb=False;
+                }break;
+                case 0:{
+                    node->fact=1;
+                    fprintf(stderr,"%s 0->1", toString(node->reference));
+                }break;
+                case 1:{
+                    if(node->right->fact==1){
+                        fprintf(stderr,"%s 1->RR", toString(node->reference));
+                        Node* a =node;
+                        Node* b= a->right;
+                        a->fact=0;
+                        b->fact=0;
+                        leftRot(root);
+                    }else{
+                        fprintf(stderr,"%s 1->RL\n", toString(node->reference));
+                        Node* a= node;
+                        Node* c= a->right;
+                        Node* b= c->left;
+                        c->fact=b->fact==-1?1:0;
+                        a->fact=b->fact==1?-1:0;
+                        b->fact=0;
+                        rightRot(&node->right);
+                        leftRot(root);
+                    }
+                    *reb=False;
+                }break;
+            }
+        }
+    }else{
+        *reb=False;
+    }
+}
+
+void insertinBalancedTree(Tree* tree, Object* object){
+    boolean reb;
+    insertinBalancedTree(&tree->root, object, &reb, tree->toString, tree->toCompare);
+}
+
+Node* dupBalancedTree(Node* root, char* (*toString)(Object*)){
+    if(root==NULL){
+        return NULL;
+    }else{
+        char* message=(char*)malloc(30);
+        sprintf(message,"%s(%d)", toString(root->reference), root->fact);
+        Node* node= cF(message);
+        node->left=dupBalancedTree(root->left, toString);
+        node->right=dupBalancedTree(root->right, toString);
+        return node;
+    }
+}
+
+Tree* dupBalancedTree(Tree* tree){
+    return createTree(dupBalancedTree(tree->root, tree->toString), toChar, compareCar);
+}
