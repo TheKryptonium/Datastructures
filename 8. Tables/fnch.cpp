@@ -47,7 +47,7 @@ int hash4(Object* object, int length){
 }
 
 
-int resolution(int h, int length, int i){//r(i)=i
+int resolution1(int h, int length, int i){//r(i)=i
     return (h+i)%length;
 }
 

@@ -12,9 +12,11 @@ int hash2(Object* key, int length);
 int hash3(Object* key, int length);
 int hash4(Object* key, int length);
 
-int resolution(int h, int length, int i);
+int resolution1(int h, int length, int i);
 int resolution2(int h,int k, int length, int i);
 int resolution3(int h, int length, int i);
 int resolution4(int h, int length, int i);
+
+void initRand(int length);
 
 #endif
