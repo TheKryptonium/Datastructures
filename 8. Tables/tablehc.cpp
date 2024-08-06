@@ -86,7 +86,7 @@ void listHC(TableHC* table){
         }
     }
     printf("\nNumber of elements in the table: %d", table->length);
-    printf("\nOccupation percentage in the table: %.2f", table->length/(double)table->max);
+    printf("\nOccupation ratio in the table: %.2f", table->length/(double)table->max);
     printf("\nAverage number of access in the table: %.2f", sn/(double)table->max);
 }
 
