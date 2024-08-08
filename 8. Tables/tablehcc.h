@@ -13,7 +13,7 @@ typedef struct{
 typedef struct{
     int max;
     int length;
-    Object** elements;
+    tableElement* elements;
     char* (*toString)(Object*);
     int (*toCompare)(Object*,Object*);
     int (*hashcode)(Object*,int);

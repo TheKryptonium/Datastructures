@@ -14,8 +14,8 @@ void push(Queue* queue, void* object){
     insertLast(queue, object);
 }
 
-void* pop(Queue* queue, void* object){
-    return extract_head(queue, object);
+void* pop(Queue* queue){
+    return extract_head(queue);
 }
 
 void listQueue(Queue* queue, void (*f)(void*)){

@@ -17,11 +17,11 @@ typedef struct{
 
 Table* createTable(int max, char* (*toString)(Object*), int (*toCompare)(Object*, Object*));
 Table* createTable(int max);
-
 void destroyTable(Table* table);
 boolean insertTable(Table* table, Object* object);
 
 int Length(Table* table);
+
 Object* locateElement(Table* table, int n);
 Object* sequentialAccess(Table* table, Object* object);
 Object* dichotomy(Table* table, Object* object, int left, int right);
@@ -29,8 +29,5 @@ Object* dichotomy(Table* table, Object* object);
 
 void sort(Table* table);
 void listTable(Table* table);
-
-
-
 
 #endif
