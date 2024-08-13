@@ -7,7 +7,7 @@ typedef int boolean;
 #define True 1
 #define False 0
 typedef char NameSommit[20];
-#define INFINTY INT_MAX
+#define INFINITY INT_MAX
 
 typedef int* matrix;
 
@@ -20,6 +20,10 @@ typedef struct{
     matrix value;
     boolean* mark;
 }Matrix;
+
+typedef struct{
+    int number;
+}Successor;
 
 Matrix* createMatrix(int max, boolean value);
 void destroyMatrix(Matrix* matrix);
